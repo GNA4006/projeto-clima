@@ -1,0 +1,121 @@
+async function buscarClima() {
+  const cidade = document.getElementById("cidade").value;
+
+  if (!cidade) {
+    alert("Digite uma cidade!");
+    return;
+  }
+
+  try {
+
+    const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${cidade}&count=1&language=pt&format=json`;
+    const geoResp = await fetch(geoUrl);
+    const geoData = await geoResp.json();
+
+    if (!geoData.results) {
+      alert("Cidade não encontrada!");
+      return;
+    }
+
+    const lat = geoData.results[0].latitude;
+    const lon = geoData.results[0].longitude;
+
+    const climaUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    const climaResp = await fetch(climaUrl);
+    const climaData = await climaResp.json();
+
+    const temp = climaData.current_weather.temperature;
+    const vento = climaData.current_weather.windspeed;
+
+  
+    let roupa = "";
+    let dica = "";
+    let imagem = "";
+    let conforto = "";
+    let acessorios = "";
+    let estilo = "";
+
+  
+    const hora = new Date().getHours();
+
+  
+    if (temp <= 10) {
+      roupa = "🥶 Muito frio";
+      dica = "Use casaco pesado, roupas térmicas e evite exposição prolongada.";
+      imagem = "img/roupa6.jpeg";
+      conforto = "Baixo conforto térmico";
+      acessorios = "🧤 Luvas, cachecol, gorro";
+    } 
+    else if (temp <= 18) {
+      roupa = "❄️ Frio";
+      dica = "Use casaco, moletom e calça.";
+      imagem = "img/roupa5.jpeg";
+      conforto = "Conforto moderado";
+      acessorios = "🧥 Jaqueta leve";
+    } 
+    else if (temp <= 25) {
+      roupa = "🌤️ Ameno";
+      dica = "Use camiseta e calça leve.";
+      imagem = "img/roupa1.jpeg";
+      conforto = "Confortável";
+      acessorios = "👕 Roupa casual";
+    } 
+    else if (temp <= 32) {
+      roupa = "☀️ Calor";
+      dica = "Use roupas leves e respiráveis.";
+      imagem = "img/roupa3.jpeg";
+      conforto = "Quente";
+      acessorios = "🧢 Boné, óculos de sol";
+    } 
+    else {
+      roupa = "🔥 Muito quente";
+      dica = "Use roupas bem frescas e hidrate-se.";
+      imagem = "img/roupa4.jpeg";
+      conforto = "Muito desconfortável";
+      acessorios = "💧 Água + roupas leves";
+    }
+
+    
+    if (vento > 30) {
+      dica += " ⚠️ Vento muito forte!";
+    } else if (vento > 20) {
+      dica += " 🌬️ Leve um casaco leve.";
+    }
+
+
+    if (hora >= 18 || hora <= 6) {
+      dica += " 🌙 À noite pode esfriar.";
+    }
+
+    
+    if (temp <= 18) {
+      estilo = "🛍️ Estilo: Inverno urbano";
+    } else if (temp <= 25) {
+      estilo = "🛍️ Estilo: Casual moderno";
+    } else {
+      estilo = "🛍️ Estilo: Verão confortável";
+    }
+
+    const resultado = document.getElementById("resultado");
+
+    resultado.classList.remove("hidden");
+
+    resultado.innerHTML = `
+      <h2>${cidade}</h2>
+      <p><strong>${temp}°C</strong> - ${roupa}</p>
+      <p>${dica}</p>
+      <p>${conforto}</p>
+      <p>${acessorios}</p>
+      <p>${estilo}</p>
+      <img src="${imagem}" alt="Roupa">
+
+      <div class="extra">
+        <hr>
+        <p> Dica extra: Monte um look baseado no clima de hoje!</p>
+    `;
+
+  } catch (erro) {
+    alert("Erro ao buscar clima!");
+    console.error(erro);
+  }
+}

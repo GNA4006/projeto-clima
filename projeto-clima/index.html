@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Shoppee Clima</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff6a00">
+</head>
+<body>
+
+  <div class="app">
+    <h1>🌦️ Shoppee Clima</h1>
+    <p class="subtitle">Sugestões de roupas para o clima de hoje</p>
+
+    <div class="search-box">
+      <input type="text" id="cidade" placeholder="Digite sua cidade">
+      <button onclick="buscarClima()">Buscar</button>
+    </div>
+
+    <div id="resultado" class="card hidden"></div>
+  </div>
+
+  <script src="./script"></script>
+</body>
+</html>
